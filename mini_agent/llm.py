@@ -68,10 +68,11 @@ class LLMClient:
 
     def __init__(self, config: Optional[LLMConfig] = None):
         self.config = config or load_config()
-        # SDK 自带超时与限流重试（max_retries 默认 2），练习项目够用
+        # SDK 自带自动重试（指数退避）；默认只重试 2 次，家用网络不稳时多给几次
         self.client = OpenAI(
             api_key=self.config.api_key,
             base_url=self.config.base_url,
+            max_retries=5,
         )
 
     def chat(self, messages: list, tools: Optional[list] = None) -> AssistantMessage:

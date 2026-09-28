@@ -49,7 +49,13 @@ def main() -> None:
             break
 
         print()
-        answer = agent.run(question)
+        try:
+            answer = agent.run(question)
+        except Exception as e:
+            # 网络波动导致的调用失败最常见：提示后继续循环，对话历史不丢
+            print(f"\n⚠️ 这次调用失败了（多半是网络波动）：{type(e).__name__}: {e}")
+            print("   直接重新问一遍就行。\n")
+            continue
         print(f"\n🤖 回答: {answer}\n")
 
 
